@@ -6,6 +6,9 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Maven](https://img.shields.io/badge/Maven-3.8+-blue.svg)](https://maven.apache.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![roadmap.sh](https://img.shields.io/badge/roadmap.sh-Task%20Tracker-purple.svg)](https://roadmap.sh/projects/task-tracker)
+
+> **📌 Project Source:** This project implements the [Task Tracker](https://roadmap.sh/projects/task-tracker) challenge from [roadmap.sh](https://roadmap.sh) - a comprehensive platform for developer roadmaps and practical project-based learning. **All requirements and specifications are defined in the [original assignment](https://roadmap.sh/projects/task-tracker).**
 
 ---
 
@@ -45,12 +48,26 @@ Task Tracker is a **command-line interface (CLI) application** designed to help 
 - **Modern Java features** (Java 21, Streams, Records-like patterns)
 - **Error handling** (graceful degradation)
 
+### 📚 Project Origin
+
+This project is based on the **[Task Tracker](https://roadmap.sh/projects/task-tracker)** project from [roadmap.sh](https://roadmap.sh), a fantastic resource for:
+- 🎯 Structured learning paths for developers
+- 💡 Practical, hands-on projects
+- 📖 Backend development best practices
+- 🚀 Real-world skill development
+
+**All project requirements, specifications, and acceptance criteria** are defined in the [original roadmap.sh assignment](https://roadmap.sh/projects/task-tracker). This implementation follows those requirements while demonstrating Spring Boot best practices.
+
+### 🎓 What You'll Learn
+
 This project is ideal for:
 - ✅ Learning Spring Boot basics
 - ✅ Understanding layered architecture
 - ✅ Practicing dependency injection
 - ✅ Building CLI applications with Spring Boot
 - ✅ Working with JSON persistence
+- ✅ Implementing CRUD operations
+- ✅ Following industry best practices
 
 ---
 
@@ -646,10 +663,10 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 ## 🌟 Acknowledgments
 
-- Spring Boot team for the amazing framework
-- Jackson library for JSON processing
-- Maven for dependency management
-- roadmap.sh for project inspiration
+- **[roadmap.sh](https://roadmap.sh)** - For the excellent [Task Tracker project](https://roadmap.sh/projects/task-tracker) requirements and providing a structured learning path for backend developers
+- **[Spring Boot](https://spring.io/projects/spring-boot)** team - For the amazing framework that makes Java development enjoyable
+- **[Jackson](https://github.com/FasterXML/jackson)** library - For robust JSON processing
+- **[Maven](https://maven.apache.org/)** - For reliable dependency management and build automation
 
 ---
 
