@@ -286,104 +286,378 @@ ls -lh target/*.jar
 
 ---
 
-### Using Maven:
+## 📚 Usage
+
+### Quick Start
 
 ```bash
-# Add a task
-./mvnw spring-boot:run -Dspring-boot.run.arguments="add 'Buy groceries'"
+# Build the project first
+./mvnw clean package
 
-# Update a task
-./mvnw spring-boot:run -Dspring-boot.run.arguments="update 1 'Buy groceries and cook dinner'"
-
-# Mark as in-progress
-./mvnw spring-boot:run -Dspring-boot.run.arguments="mark-in-progress 1"
-
-# Mark as done
-./mvnw spring-boot:run -Dspring-boot.run.arguments="mark-done 1"
-
-# List all tasks
-./mvnw spring-boot:run -Dspring-boot.run.arguments="list"
-
-# List tasks by status
-./mvnw spring-boot:run -Dspring-boot.run.arguments="list done"
-./mvnw spring-boot:run -Dspring-boot.run.arguments="list todo"
-./mvnw spring-boot:run -Dspring-boot.run.arguments="list in-progress"
-
-# Delete a task
-./mvnw spring-boot:run -Dspring-boot.run.arguments="delete 1"
+# Now you can use the application
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add "Buy groceries"
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list
 ```
 
-### Using the JAR directly (after building):
+### Command Examples
 
+#### Using JAR (Recommended - Faster)
 ```bash
+# Add tasks
 java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add "Buy groceries"
-java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar update 1 "New description"
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add "Write documentation"
+
+# Update task
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar update 1 "Buy groceries and cook dinner"
+
+# Mark task status
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar mark-in-progress 1
 java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar mark-done 1
+
+# List tasks
 java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list
 java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list done
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list todo
+java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list in-progress
+
+# Delete task
 java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar delete 1
 ```
 
-## Task Properties
-
-Each task contains:
-
-- **id**: Unique identifier (auto-generated)
-- **description**: Task description
-- **status**: One of `todo`, `in-progress`, or `done`
-- **createdAt**: Timestamp when task was created
-- **updatedAt**: Timestamp when task was last modified
-
-## Example Usage
-
+#### Using Maven (Slower - Good for Development)
 ```bash
-# Add some tasks
 ./mvnw spring-boot:run -Dspring-boot.run.arguments="add 'Buy groceries'"
-# Output: Task added successfully (ID: 1)
-
-./mvnw spring-boot:run -Dspring-boot.run.arguments="add 'Write documentation'"
-# Output: Task added successfully (ID: 2)
-
-# Mark first task as in progress
-./mvnw spring-boot:run -Dspring-boot.run.arguments="mark-in-progress 1"
-# Output: Task 1 marked as in-progress
-
-# List all tasks
 ./mvnw spring-boot:run -Dspring-boot.run.arguments="list"
-# Output:
-# === Tasks ===
-# [1] Buy groceries | Status: IN-PROGRESS | Created: 2025-12-10 10:30:00 | Updated: 2025-12-10 10:31:00
-# [2] Write documentation | Status: TODO | Created: 2025-12-10 10:30:15 | Updated: 2025-12-10 10:30:15
+./mvnw spring-boot:run -Dspring-boot.run.arguments="mark-done 1"
 ```
 
-## Error Handling
+### Sample Workflow
 
-The application handles:
-- Invalid task IDs
-- Empty descriptions
-- Non-existent tasks
-- Invalid commands
-- File I/O errors
+```bash
+# Day 1: Plan your tasks
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add "Review pull requests"
+Task added successfully (ID: 1)
 
-## Learning Points (Spring Boot)
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add "Update documentation"
+Task added successfully (ID: 2)
 
-This project demonstrates:
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add "Deploy to staging"
+Task added successfully (ID: 3)
 
-1. **Layered Architecture**: Model → Repository → Service → CLI
-2. **Dependency Injection**: All components use constructor injection
-3. **Separation of Concerns**: Each layer has a specific responsibility
-4. **Spring Annotations**: @Component, @Service, @SpringBootApplication
-5. **CommandLineRunner**: Processing arguments in a Spring Boot context
+# Start working
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar mark-in-progress 1
+Task 1 marked as in-progress
 
-## Next Steps (Optional Enhancements)
+# Check your progress
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list
 
-- Add task priorities
-- Add due dates
-- Search tasks by keyword
-- Export tasks to different formats
-- Add task categories/tags
+=== Tasks ===
+[1] Review pull requests | Status: IN-PROGRESS | Created: 2025-12-10 09:00:00 | Updated: 2025-12-10 09:15:00
+[2] Update documentation | Status: TODO | Created: 2025-12-10 09:01:00 | Updated: 2025-12-10 09:01:00
+[3] Deploy to staging | Status: TODO | Created: 2025-12-10 09:02:00 | Updated: 2025-12-10 09:02:00
 
-## Author
+# Complete task
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar mark-done 1
+Task 1 marked as done
 
-Built as a learning project for Spring Boot fundamentals.
+# View only completed tasks
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar list done
+
+=== Tasks ===
+[1] Review pull requests | Status: DONE | Created: 2025-12-10 09:00:00 | Updated: 2025-12-10 10:30:00
+```
+
+---
+
+## 💾 Data Storage
+
+### JSON File Structure
+
+Tasks are stored in `tasks.json` in the project root directory:
+
+```json
+[
+  {
+    "id": 1,
+    "description": "Buy groceries",
+    "status": "todo",
+    "createdAt": "2025-12-10T15:30:00.123456789",
+    "updatedAt": "2025-12-10T15:30:00.123456789"
+  },
+  {
+    "id": 2,
+    "description": "Write documentation",
+    "status": "in-progress",
+    "createdAt": "2025-12-10T15:31:00.987654321",
+    "updatedAt": "2025-12-10T16:45:00.456789123"
+  }
+]
+```
+
+### Task Properties
+
+| Property | Type | Description | Example |
+|----------|------|-------------|---------|
+| **id** | Integer | Unique identifier (auto-generated) | `1` |
+| **description** | String | Task description | `"Buy groceries"` |
+| **status** | String | Current status | `"todo"`, `"in-progress"`, `"done"` |
+| **createdAt** | LocalDateTime | Creation timestamp (ISO-8601) | `"2025-12-10T15:30:00"` |
+| **updatedAt** | LocalDateTime | Last update timestamp (ISO-8601) | `"2025-12-10T16:45:00"` |
+
+### File Management
+
+- ✅ **Auto-creation**: File is created automatically on first task addition
+- ✅ **Pretty-printed**: JSON is formatted for readability
+- ✅ **Persistent**: Data survives application restarts
+- ✅ **Portable**: Copy `tasks.json` to backup or transfer tasks
+
+---
+
+## 🎓 Spring Boot Concepts
+
+This project demonstrates key Spring Boot concepts:
+
+### 1. @SpringBootApplication
+```java
+@SpringBootApplication
+public class TaskTrackerApplication {
+    // Entry point - combines @Configuration, @EnableAutoConfiguration, @ComponentScan
+}
+```
+
+### 2. Component Scanning
+```java
+@Component   // TaskRepository, TaskCLI
+@Service     // TaskService (specialized @Component for business logic)
+```
+
+### 3. Dependency Injection
+```java
+@Service
+public class TaskService {
+    private final TaskRepository repository;
+    
+    // Constructor injection - Spring Boot best practice
+    public TaskService(TaskRepository repository) {
+        this.repository = repository;
+    }
+}
+```
+
+### 4. CommandLineRunner
+```java
+@Component
+public class TaskCLI implements CommandLineRunner {
+    @Override
+    public void run(String... args) {
+        // Executed after Spring Boot startup
+    }
+}
+```
+
+### 5. Configuration Management
+```properties
+# application.properties
+logging.level.root=ERROR
+logging.level.org.springframework=ERROR
+```
+
+---
+
+## 📖 Code Documentation
+
+All classes are **fully documented** with:
+- ✅ **JavaDoc comments** - Class-level and method-level documentation
+- ✅ **Inline comments** - Explaining complex logic
+- ✅ **Best practices** - Following Java and Spring Boot conventions
+
+### Documentation Coverage
+
+| File | Lines | Documentation |
+|------|-------|---------------|
+| `Task.java` | ~150 | ✅ Complete |
+| `TaskRepository.java` | ~120 | ✅ Complete |
+| `TaskService.java` | ~180 | ✅ Complete |
+| `TaskCLI.java` | ~200 | ✅ Complete |
+| `TaskTrackerApplication.java` | ~60 | ✅ Complete |
+
+---
+
+## ⚠️ Error Handling
+
+The application gracefully handles all common error scenarios:
+
+### Validation Errors
+
+```bash
+# Empty description
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add ""
+Error: Task description cannot be empty
+
+# Invalid task ID
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar delete 999
+Error: Task with ID 999 does not exist
+
+# Non-numeric ID
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar update abc "New task"
+Error: Invalid task ID. Please provide a valid number.
+```
+
+### Command Errors
+
+```bash
+# Unknown command
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar invalid
+Unknown command: invalid
+
+Task Tracker CLI - Available Commands:
+add "description"              - Add a new task
+...
+
+# Missing arguments
+$ java -jar target/TaskTracker-0.0.1-SNAPSHOT.jar add
+Usage: add "task description"
+```
+
+### File I/O Errors
+- Handles missing `tasks.json` (creates new file)
+- Handles corrupted JSON (returns empty list)
+- Handles permission errors (displays error message)
+
+---
+
+## 🧪 Testing
+
+### Run Tests
+
+```bash
+# Run all tests
+./mvnw test
+
+# Run with coverage
+./mvnw clean test jacoco:report
+```
+
+### Test Coverage
+
+- ✅ **Context Loading Test** - Verifies Spring Boot configuration
+- 📝 **Future**: Add unit tests for TaskService
+- 📝 **Future**: Add integration tests for file operations
+
+---
+
+## 🚀 Future Enhancements
+
+Ideas for extending this project:
+
+### Features
+- [ ] Task priorities (High, Medium, Low)
+- [ ] Due dates and reminders
+- [ ] Task categories/tags
+- [ ] Search tasks by keyword
+- [ ] Task notes/comments
+- [ ] Recurring tasks
+- [ ] Export to CSV/PDF
+
+### Technical Improvements
+- [ ] Add Spring Data JPA for database storage
+- [ ] Create REST API with Spring Web
+- [ ] Add Spring Security for authentication
+- [ ] Implement caching with Spring Cache
+- [ ] Add scheduled tasks with @Scheduled
+- [ ] Create Docker container
+- [ ] Add comprehensive unit tests
+
+### UI Enhancements
+- [ ] Colored console output (ANSI colors)
+- [ ] Table formatting for task lists
+- [ ] Progress bars for task completion
+- [ ] Interactive mode (menu-driven)
+
+---
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Problem:** `java: command not found`
+```bash
+# Solution: Install Java 21
+sudo apt install openjdk-21-jdk  # Ubuntu/Debian
+brew install openjdk@21          # macOS
+```
+
+**Problem:** `mvnw: Permission denied`
+```bash
+# Solution: Make Maven wrapper executable
+chmod +x mvnw
+```
+
+**Problem:** `Error: Could not find or load main class`
+```bash
+# Solution: Rebuild the project
+./mvnw clean package
+```
+
+**Problem:** Tasks not persisting
+```bash
+# Check if tasks.json exists and is writable
+ls -la tasks.json
+chmod 644 tasks.json  # Fix permissions if needed
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Code Style
+- Follow Java naming conventions
+- Add JavaDoc comments for all public methods
+- Keep methods focused (Single Responsibility Principle)
+- Write unit tests for new features
+
+---
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## 👨‍💻 Author
+
+**Task Tracker CLI** - Built as a learning project for Spring Boot fundamentals.
+
+### Learning Resources
+- [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
+- [Spring Framework Reference](https://docs.spring.io/spring-framework/reference/)
+- [Maven Getting Started](https://maven.apache.org/guides/getting-started/)
+- [Java 21 Documentation](https://docs.oracle.com/en/java/javase/21/)
+
+---
+
+## 🌟 Acknowledgments
+
+- Spring Boot team for the amazing framework
+- Jackson library for JSON processing
+- Maven for dependency management
+- roadmap.sh for project inspiration
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you found it helpful!**
+
+Made with ❤️ using Spring Boot
+
+</div>
 
